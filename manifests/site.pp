@@ -1,24 +1,65 @@
 node default {
-  include role::web_server
-
-  firewalld_port { 'Open port 8888 in the public zone':
-    ensure   => present,
-    zone     => public,
-    port     => 8888,
-    protocol => 'tcp',
+  notify { 'os_version':
+    message   => "Running on ${facts['os']['name']} version ${facts['os']['release']}"
   }
-
-  firewalld_service { 'Allow HTTP from the external zone':
-      ensure  => 'present',
-      service => 'http',
-      zone    => 'public',
-  }
-
-
-  include wcg
-
 }
 
 node slave1.puppet {
-  include role::dev_machine
+
+  package { 'httpd':
+    ensure    => installed,
+  }
+
+  file { '/var/www/html/index.html':
+    ensure    => present,
+    source    => "/vagrant/index.html",
+  }
+
+  exec { 'open-port-80':
+    command   => '/usr/bin/firewall-cmd --add-port=80/tcp --permanent',
+    path      => '/usr/bin',
+  }
+
+  exec { 'restart_firewalld':
+    command   => '/usr/bin/systemctl restart firewalld',
+    path      => '/usr/bin',
+  }
+
+  service { 'httpd':
+    ensure    => running,
+    enable    => true,
+    require   => Package['httpd'],
+  }
+}
+
+node slave2.puppet {
+
+  package { ['httpd', 'php']:
+    ensure    => installed,
+  }
+
+  file { '/var/www/html/index.php':
+    ensure    => present,
+    source    => '/vagrant/index.php',
+  }
+
+  file { '/var/www/html/index.html':
+    ensure    => absent,
+  }
+
+  exec { 'open-port-80':
+    command   => '/usr/bin/firewall-cmd --add-port=80/tcp --permanent',
+    path      => '/usr/bin',
+  }
+
+  exec { 'restart_firewalld':
+    command   => '/usr/bin/systemctl restart firewalld',
+    path      => '/usr/bin',
+  }
+
+  service { 'httpd':
+    ensure    => running,
+    enable    => true,
+    require   => Package['httpd'],
+  }
 }
