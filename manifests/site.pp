@@ -32,7 +32,7 @@ node slave1.puppet {
   }
 }
 
-  include wcg
+node slave2.puppet {
 
   package { ['httpd', 'php']:
     ensure    => installed,
