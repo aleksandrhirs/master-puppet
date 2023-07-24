@@ -66,15 +66,6 @@ node slave2.puppet {
 
 node master.puppet {
 
-  package { ['httpd', 'php']:
-    ensure    => installed,
-  }
-
-  file { '/var/www/html/index.php':
-    ensure    => present,
-    source    => '/vagrant/index.php',
-  }
-
   package { 'nginx':
     ensure    => 'installed',
   }
