@@ -14,6 +14,12 @@ class minecraft {
     notify => Service['minecraft'],
   }
 
+  file { 'eula.txt':
+    path   => "/opt/minecraft/eula.txt",
+    source => "puppet:///modules/minecraft/eula.txt",
+    notify => Service['minecraft'],
+  }
+
   service { 'minecraft':
     ensure  => running,
     require => File['minecraft_service'],
