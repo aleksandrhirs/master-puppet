@@ -87,7 +87,7 @@ node mineserver.puppet {
     ensure => 'directory',
   }
 
-  package { 'openjdk-8-jre-headless':
+  package { 'java-1.8.0-openjdk':
     ensure => installed,
   }
 
