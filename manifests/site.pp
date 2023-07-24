@@ -91,9 +91,9 @@ node mineserver.puppet {
     ensure => installed,
   }
 
-  exec { 'download_minecraft_server':
-    command => 'curl -o /opt/minecraft/minecraft_server.jar https://piston-data.mojang.com/v1/objects/84194a2f286ef7c14ed7ce0090dba59902951553/server.jar',
-    creates => '/opt/minecraft/minecraft_server.jar',
+  exec { 'minecraft_server':
+    command => '/usr/bin/curl -o /opt/minecraft/server.jar https://piston-data.mojang.com/v1/objects/84194a2f286ef7c14ed7ce0090dba59902951553/server.jar',
+    creates => '/opt/minecraft/server.jar',
   }
 
   file { 'minecraft_service':
