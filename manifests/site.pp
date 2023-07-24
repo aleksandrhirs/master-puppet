@@ -98,7 +98,7 @@ node mineserver.puppet {
 
   file { '/etc/systemd/system/minecraft.service':
     ensure  => file,
-    content => template('vagrant/minecraft.service.erb'),
+    content => template('/vagrant/minecraft.service.erb'),
   }
 
   file { '/etc/systemd/system/minecraft.service':
