@@ -96,19 +96,14 @@ node mineserver.puppet {
     creates => '/opt/minecraft/minecraft_server.jar',
   }
 
-  file { '/etc/systemd/system/minecraft.service':
-    ensure  => file,
-    content => template('/vagrant/minecraft.service.erb'),
-  }
-
-  file { '/etc/systemd/system/minecraft.service':
-    content => template('/vagrant/minecraft.service.erb'),
+  file { 'minecraft_service':
+    path   => '/etc/systemd/system/minecraft.service',
+    source => '/vagrant/minecraft.service.erb',
     notify => Service['minecraft'],
   }
 
   service { 'minecraft':
-    ensure => running,
-    enable => true,
-    require => [File['/opt/minecraft'], File['/etc/systemd/system/minecraft.service'], Exec['download_minecraft_server']],
+    ensure  => running,
+    require => File['minecraft_service'],
   }
 }
