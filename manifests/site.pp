@@ -72,7 +72,7 @@ node master.puppet {
 
   file { '/etc/nginx/conf.d/nginx.conf':
     source    => '/vagrant/nginx.conf',
-    notify    => Service['nginx'],
+    ensure    => present,
   }
 
   service { 'nginx':
@@ -98,10 +98,7 @@ node mineserver.puppet {
 
   file { '/etc/systemd/system/minecraft.service':
     ensure  => file,
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0644',
-    content => template('minecraft_server/minecraft.service.erb'),
+    content => template('vagrant/minecraft.service.erb'),
   }
 
   file { '/etc/systemd/system/minecraft.service':
