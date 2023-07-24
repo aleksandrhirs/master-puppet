@@ -87,7 +87,7 @@ node mineserver.puppet {
     ensure => 'directory',
   }
 
-  package { 'java-1.8.0-openjdk':
+  package { 'java-17-openjdk-devel':
     ensure => installed,
   }
 
