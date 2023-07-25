@@ -1,1 +1,0 @@
-mod 'puppet-nginx', '5.0.0'

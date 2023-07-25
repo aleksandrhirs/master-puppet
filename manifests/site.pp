@@ -66,7 +66,9 @@ node slave2.puppet {
 
 node master.puppet {
 
-  include nginx
+  package { 'nginx':
+    ensure    => 'installed',
+  }
 
   file { '/etc/nginx/conf.d/nginx.conf':
     source    => '/vagrant/nginx.conf',
