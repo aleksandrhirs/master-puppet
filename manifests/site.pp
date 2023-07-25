@@ -66,8 +66,11 @@ node slave2.puppet {
 
 node master.puppet {
 
-  package { 'nginx':
-    ensure    => 'installed',
+  class { 'nginx':
+    manage_repo    => true,
+    service_manage => true,
+    service_ensure => 'running',
+    service_enable => true,
   }
 
   file { '/etc/nginx/conf.d/nginx.conf':
@@ -75,9 +78,9 @@ node master.puppet {
     ensure    => present,
   }
 
-  service { 'nginx':
-    ensure    => 'running',
-    enable    => true,
+  ~> exec { 'nginx-restart':
+    command     => '/usr/sbin/service nginx restart',
+    refreshonly => true,
   }
 }
 
