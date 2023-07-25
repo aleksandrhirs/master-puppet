@@ -66,22 +66,13 @@ node slave2.puppet {
 
 node master.puppet {
 
-  package { ['httpd', 'php']:
-    ensure    => installed,
-  }
-
-  file { '/var/www/html/index.php':
-    ensure    => present,
-    source    => '/vagrant/index.php',
-  }
-
   package { 'nginx':
     ensure    => 'installed',
   }
 
   file { '/etc/nginx/conf.d/nginx.conf':
     source    => '/vagrant/nginx.conf',
-    notify    => Service['nginx'],
+    ensure    => present,
   }
 
   service { 'nginx':
@@ -92,35 +83,9 @@ node master.puppet {
 
 node mineserver.puppet {
 
-  file { '/opt/minecraft':
-    ensure => 'directory',
+  package { 'java-17-openjdk-devel':
+    ensure     => installed,
   }
 
-  package { 'openjdk-8-jre-headless':
-    ensure => installed,
-  }
-
-  exec { 'download_minecraft_server':
-    command => 'curl -o /opt/minecraft/minecraft_server.jar https://piston-data.mojang.com/v1/objects/84194a2f286ef7c14ed7ce0090dba59902951553/server.jar',
-    creates => '/opt/minecraft/minecraft_server.jar',
-  }
-
-  file { '/etc/systemd/system/minecraft.service':
-    ensure  => file,
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0644',
-    content => template('minecraft_server/minecraft.service.erb'),
-  }
-
-  file { '/etc/systemd/system/minecraft.service':
-    content => template('/vagrant/minecraft.service.erb'),
-    notify => Service['minecraft'],
-  }
-
-  service { 'minecraft':
-    ensure => running,
-    enable => true,
-    require => [File['/opt/minecraft'], File['/etc/systemd/system/minecraft.service'], Exec['download_minecraft_server']],
-  }
+  include minecraft
 }
